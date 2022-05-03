@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Hash from "./Hash";
 
-function App() {
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>{text}</button>
+);
+
+const App = () => {
+  const [text, setText] = useState("");
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <input
+        type="text"
+        value={text}
+        placeholder="password"
+        onChange={(e) => setText(e.target.value)}
+      />
+      <Button
+        handleClick={async () => {
+          try {
+            setLoading(true);
+            setResult(await Hash(text));
+            setLoading(false);
+          } catch (error) {
+            setLoading(false);
+          }
+        }}
+        text="Hash"
+      />
+      {loading ? <h1>loading...</h1> : <h1>{result}</h1>}
+    </>
   );
-}
+};
 
 export default App;
